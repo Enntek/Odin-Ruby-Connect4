@@ -5,12 +5,21 @@ require_relative 'gameboard'
 require_relative 'cell'
 require_relative 'display'
 
-
-
 # There are 2 players in Connect Four
 class Player
-  def initialize(name, color = 'red')
+  include Display
+  include ValidInput
+  attr_reader :name, :color
+
+  def initialize(name, color = nil)
     @name = name
     @color = color
+  end
+
+  def establish_color
+    choices = %w[r b]
+    valid_input = validate_input(choices)
+    picked_color = valid_input == 'r' ? 'red' : 'blue'
+    @color = picked_color
   end
 end
