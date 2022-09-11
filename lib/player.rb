@@ -22,4 +22,9 @@ class Player
     picked_color = valid_input == 'r' ? 'red' : 'blue'
     @color = picked_color
   end
+
+  def takes_other_color(taken_color)
+    remaining_color = taken_color == 'red' ? 'blue' : 'red'
+    @color = remaining_color
+  end
 end

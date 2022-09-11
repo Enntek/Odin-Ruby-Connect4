@@ -16,8 +16,9 @@ describe ConnectFour do
   end
 
   describe '#choose_color' do
-    it 'sets red or blue for each player' do
-
+    it 'sends #establish_color to player1' do
+      expect(game.player1).to receive(:establish_color)
+      game.choose_color
     end
   end
 end
@@ -48,16 +49,36 @@ describe Player do
   describe '#establish_color' do
     let(:player) { described_class.new('Player One') }
 
-    context 'when first input is valid' do
+    context 'when player1 picks red, player2 is blue automatically' do
       it 'sets player1 color to red when input is r' do
         allow(player).to receive(:gets).and_return('r')
         expect { player.establish_color }.to change(player, :color).from(nil).to('red')
       end
+    end
 
+    context 'when player1 picks blue, player2 is red automatically' do
       it 'sets player1 color to blue when input is b' do
         allow(player).to receive(:gets).and_return('b')
         expect { player.establish_color }.to change(player, :color).from(nil).to('blue')
       end
+    end
+  end
+
+  describe '#takes_other_color' do
+    let(:player2) { described_class.new('Player Two') }
+
+    it 'sets player2 as blue when player1 is red' do
+      taken_color = 'red'
+      player2.takes_other_color(taken_color)
+
+      expect(player2.color).to eq('blue')
+    end
+
+    it 'sets player2 as red when player1 is blue' do
+      taken_color = 'blue'
+      player2.takes_other_color(taken_color)
+
+      expect(player2.color).to eq('red')
     end
   end
 end
@@ -65,10 +86,6 @@ end
 describe GameBoard do
   let(:gameboard) { described_class.new }
   describe '#create_cells' do
-    before do
-      # allow(all_cells).to receive(:map)
-    end
-
     it 'returns an array' do
       expect(gameboard.create_cells).to be_kind_of(Array)
     end
@@ -76,6 +93,5 @@ describe GameBoard do
 end
 
 describe Cell do
-
+  # Cell contains no other method besides initialize
 end
-

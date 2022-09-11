@@ -29,6 +29,7 @@ class ConnectFour
   def choose_color
     choose_color_message
     player1.establish_color
+    player2.takes_other_color(player1.color)
   end
 
   def turn_loop
