@@ -5,18 +5,14 @@ require_relative 'player'
 require_relative 'cell'
 require_relative 'display'
 
+module LifeCycle
+  RESET ||= 'reset'
+end
+
 
 # A Connect Four board has 42 cells (6 high, 7 across)
 class GameBoard
   attr_reader :cells
-
-  COLUMN_1 = [0, 7, 14, 21, 28, 35].freeze
-  COLUMN_2 = [1, 8, 15, 22, 29, 36].freeze
-  COLUMN_3 = [2, 9, 16, 23, 30, 37].freeze
-  COLUMN_4 = [3, 10, 17, 24, 31, 38].freeze
-  COLUMN_5 = [4, 11, 18, 25, 32, 39].freeze
-  COLUMN_6 = [5, 12, 19, 26, 33, 40].freeze
-  COLUMN_7 = [6, 13, 20, 27, 34, 41].freeze
 
   def initialize
     @cells = create_cells
@@ -28,13 +24,27 @@ class GameBoard
       Cell.new(index)
     end
   end
-
-  def has_free_cells?(column)
-
+  
+  def columns
+    [[0, 7, 14, 21, 28, 35],
+     [1, 8, 15, 22, 29, 36],
+     [2, 9, 16, 23, 30, 37],
+     [3, 10, 17, 24, 31, 38],
+     [4, 11, 18, 25, 32, 39],
+     [5, 12, 19, 26, 33, 40],
+     [6, 13, 20, 27, 34, 41]]
   end
+
+  def has_free_cells?(column_number = 1)
+    columns[column_number].each do |item|
+      puts cells[item].state
+    end
+  end
+
 end
 
-# gameboard = GameBoard.new
+gameboard = GameBoard.new
+gameboard.has_free_cells?
 
 
 ###

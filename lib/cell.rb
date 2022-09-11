@@ -10,7 +10,7 @@ require_relative 'display'
 class Cell
   attr_reader :state
 
-  def initialize(number, state = 'e'.blue)
+  def initialize(number, state = ' '.blue)
     @number = number
     @state = state
   end

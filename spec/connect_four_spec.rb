@@ -141,7 +141,8 @@ describe GameBoard do
   describe '#has_free_cells?' do
     context 'when given column has at least one free cell' do
       it 'returns true' do
-
+        column_number = 1
+        gameboard.has_free_cells?(column_number)
       end
     end
 
