@@ -10,6 +10,14 @@ require_relative 'display'
 class GameBoard
   attr_reader :cells
 
+  COLUMN_1 = [0, 7, 14, 21, 28, 35].freeze
+  COLUMN_2 = [1, 8, 15, 22, 29, 36].freeze
+  COLUMN_3 = [2, 9, 16, 23, 30, 37].freeze
+  COLUMN_4 = [3, 10, 17, 24, 31, 38].freeze
+  COLUMN_5 = [4, 11, 18, 25, 32, 39].freeze
+  COLUMN_6 = [5, 12, 19, 26, 33, 40].freeze
+  COLUMN_7 = [6, 13, 20, 27, 34, 41].freeze
+
   def initialize
     @cells = create_cells
   end
@@ -19,6 +27,10 @@ class GameBoard
     all_cells.map.with_index do |item, index|
       Cell.new(index)
     end
+  end
+
+  def has_free_cells?(column)
+
   end
 end
 

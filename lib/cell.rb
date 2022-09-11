@@ -8,8 +8,14 @@ require_relative 'display'
 
 # A Connect Four board has 42 cells (6 high, 7 across)
 class Cell
-  def initialize(number, state = 'unoccupied')
+  attr_reader :state
+
+  def initialize(number, state = 'e'.blue)
     @number = number
     @state = state
+  end
+
+  def to_s
+    state
   end
 end

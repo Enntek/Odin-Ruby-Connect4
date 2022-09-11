@@ -11,18 +11,22 @@ require_relative 'display'
 # This class contains the game logic for Connect Four
 class ConnectFour
   include Display
-  attr_reader :player1, :player2
+  include ValidInput
+
+  attr_reader :player1, :player2, :current_player
 
   def initialize
     # what should we put in here?
     @gameboard = GameBoard.new
     @player1 = Player.new('Player One')
     @player2 = Player.new('Player Two')
+    @current_player = player1
   end
 
   def play_game
     greeting
     choose_color
+    turn_loop
     # turn_loop until game_over?
   end
 
@@ -33,11 +37,29 @@ class ConnectFour
   end
 
   def turn_loop
-
+    draw_board
+    move_piece
+    # switch_current_player
+    # check_draw
+    # check_win
   end
 
-  def game_over?
+  def move_piece
+    loop do
+      column = input_column_number
+      break if gameboard.has_free_cells?(column)
+    end
 
+    # we need to write code to find what pieces are in the column
+  end
+
+  def input_column_number
+    select_column_message
+    allowable_input = (1..7).to_a
+    valid_column_number = validate_input(allowable_input)
+  end
+
+  def game_over? 
   end
 
   def greeting
