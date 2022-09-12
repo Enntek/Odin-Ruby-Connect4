@@ -13,7 +13,6 @@ class ConnectFour
   attr_reader :player1, :player2, :current_player, :gameboard
 
   def initialize
-    # what should we put in here?
     @gameboard = GameBoard.new
     @player1 = Player.new('Player One')
     @player2 = Player.new('Player Two')
@@ -42,7 +41,7 @@ class ConnectFour
   end
 
   def switch_current_player
-
+    @current_player = @current_player == player1 ? player2 : player1
   end
 
   def execute_turn(col_number = 0)

@@ -7,7 +7,19 @@ describe ConnectFour do
   let(:game) { described_class.new }
 
   describe '#initialize' do
-    # initialize -> No test necessary when only creating instance variables.
+    it 'creates an instance of GameBoard' do
+      gameboard = class_double('GameBoard').as_stubbed_const
+
+      expect(gameboard).to receive(:new).once
+      ConnectFour.new
+    end
+
+    it 'creates two instances of Player' do
+      player = class_double('Player').as_stubbed_const
+
+      expect(player).to receive(:new).twice
+      ConnectFour.new
+    end
   end
 
   describe '#play_game' do
@@ -67,12 +79,10 @@ describe ConnectFour do
   end
 
   describe '#switch_current_player' do
-    let(:player) { instance_double(Player) }
-    let(:game_switch_player) { described_class.new }
+    let(:game_switch) { described_class.new }
 
     it 'changes current_player to the other player' do
-      expect(game.current_player).to eq()
-      game.switch_current_player
+      expect { game_switch.switch_current_player }.to change(game_switch, :current_player)
     end
   end
 end

@@ -28,5 +28,6 @@ We need to use our column1 array to find the first free cell.
 
 Change state from ' ' to something meaningful
 
+We need to test what, not how.
 "
 
