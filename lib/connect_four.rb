@@ -12,17 +12,24 @@ class ConnectFour
 
   attr_reader :player1, :player2, :current_player, :gameboard
 
-  def initialize
-    @gameboard = GameBoard.new
-    @player1 = Player.new('Player One')
-    @player2 = Player.new('Player Two')
-    @current_player = player1
+  # def initialize(gameboard = GameBoard, player = Player)
+  #   @gameboard = gameboard.new
+  #   @player1 = player.new('Player One')
+  #   @player2 = player.new('Player Two')
+  #   @current_player = player1
+  # end
+
+  def initialize(gameboard = nil, p1 = nil, p2 = nil)
+    @gameboard = gameboard || GameBoard.new
+    @player1 = p1 || Player.new('Player One')
+    @player2 = p2 || Player.new('Player Two')
   end
 
   def play_game
     greeting
     choose_color
     # turn_loop
+    draw_board
     turn_loop until game_over?
   end
 
@@ -33,11 +40,11 @@ class ConnectFour
   end
 
   def turn_loop
-    draw_board
     execute_turn
-    switch_current_player
+    draw_board
     # check_draw
     # check_win
+    switch_current_player
   end
 
   def switch_current_player

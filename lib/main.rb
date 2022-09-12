@@ -7,10 +7,7 @@ require_relative 'cell'
 require_relative 'display'
 
 game = ConnectFour.new
-game.play_game
-
-# require 'pry-byebug'
-# binding.pry
+# game.gameboard.columns
 
 # gameboard = GameBoard.new
 # gameboard.free_cell?(1)
@@ -20,14 +17,13 @@ game.play_game
 # Keep methods SRP, keep classes SRP
 
 "
-
-We have column1, which is an array of numbers.
-We want to know if there are any @cells that are free.
-We need to use our column1 array to find the first free cell.
-
+Check each cell from left to right.
+Check horizontal wins ONLY to the RIGHT.
+Check vertical wins going UP.
+Check diagonal wins up-left and up-right.
+We need to use a counter.
 
 Change state from ' ' to something meaningful
 
 We need to test what, not how.
 "
-
