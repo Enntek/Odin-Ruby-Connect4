@@ -29,6 +29,10 @@ module Display
   def select_column_message
     puts 'Select a column from 1 - 7:'
   end
+
+  def column_full_message
+    puts 'This column is full! Please select another column.'.bg_red
+  end
 end
 
 # This module makes sure user input matches given criteria

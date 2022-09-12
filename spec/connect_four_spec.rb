@@ -30,12 +30,12 @@ describe ConnectFour do
 
   describe '#input_column_number' do
     context 'when user input is a valid column number' do
-      it 'returns a column number' do
+      it 'returns column number - 1' do
         valid_column_number = '1'
         allow(game).to receive(:puts)
         allow(game).to receive(:gets).and_return(valid_column_number)
 
-        expect(game.input_column_number).to eq('1')
+        expect(game.input_column_number).to eq(0)
       end
     end
 
@@ -52,19 +52,27 @@ describe ConnectFour do
     end
   end
 
-  describe '#move_piece' do
-    context 'when player is blue' do
-      it "changes one cell's state to blue" do
+  describe '#drop_piece_in_column' do
+    let(:game) { described_class.new }
 
-      end
+    before do
+
+    end
+
+    xit 'does something' do
+      col_number = 1
+      player = 'player 1'
+      game.move_piece(col_number, player)
     end
   end
 
-  describe '#free_cells?' do
-    it 'returns true when column has free cells' do
-    end
+  describe '#switch_current_player' do
+    let(:player) { instance_double(Player) }
+    let(:game_switch_player) { described_class.new }
 
-    xit 'returns false when column is full' do
+    it 'changes current_player to the other player' do
+      expect(game.current_player).to eq()
+      game.switch_current_player
     end
   end
 end
@@ -98,12 +106,12 @@ describe Player do
     context 'when input is valid' do
       it 'sets player1 color to red when input is r' do
         allow(player).to receive(:gets).and_return('r')
-        expect { player.establish_color }.to change(player, :color).from(nil).to('red')
+        expect { player.establish_color }.to change(player, :color).from(nil).to('r')
       end
 
       it 'sets player1 color to blue when input is b' do
         allow(player).to receive(:gets).and_return('b')
-        expect { player.establish_color }.to change(player, :color).from(nil).to('blue')
+        expect { player.establish_color }.to change(player, :color).from(nil).to('b')
       end
     end
 
@@ -115,17 +123,17 @@ describe Player do
     let(:player2) { described_class.new('Player Two') }
 
     it 'sets player2 as blue when player1 is red' do
-      taken_color = 'red'
+      taken_color = 'r'
       player2.takes_other_color(taken_color)
 
-      expect(player2.color).to eq('blue')
+      expect(player2.color).to eq('b')
     end
 
     it 'sets player2 as red when player1 is blue' do
-      taken_color = 'blue'
+      taken_color = 'b'
       player2.takes_other_color(taken_color)
 
-      expect(player2.color).to eq('red')
+      expect(player2.color).to eq('r')
     end
   end
 end
@@ -138,22 +146,67 @@ describe GameBoard do
     end
   end
 
-  describe '#has_free_cells?' do
+  describe '#column_of_cells' do
+    it 'returns an array of Cell objects' do
+      array = gameboard.retrieve_column
+      expect(array).to be_kind_of(Array)
+    end
+  end
+
+  describe '#free_cells?' do
     context 'when given column has at least one free cell' do
+      let(:cell) { instance_double(Cell, state: ' ') }
+
+      before do
+        array_with_one_cell = [cell]
+        allow(gameboard).to receive(:retrieve_column).and_return(array_with_one_cell)
+      end
+
       it 'returns true' do
-        column_number = 1
-        gameboard.has_free_cells?(column_number)
+        col_number = 1
+        return_value = gameboard.free_cell?(col_number)
+        expect(return_value).to be true
       end
     end
 
     context 'when given column has no free cells' do
-      xit 'returns false' do
+      let(:cell) { instance_double(Cell, state: 'red') }
 
+      before do
+        array_with_one_cell = [cell]
+        allow(gameboard).to receive(:puts)
+        allow(gameboard).to receive(:retrieve_column).and_return(array_with_one_cell)
       end
+
+      it 'returns false' do
+        col_number = 1
+        return_value = gameboard.free_cell?(col_number)
+        expect(return_value).to be_nil
+      end
+    end
+  end
+
+  describe '#take_cell' do
+    let(:player) { instance_double(Player, color: 'r') }
+    let(:cell) { instance_double(Cell, state: ' ') }
+
+    it 'calls change_state on a free cell' do
+      col_number = 1
+      array_of_cells = [cell, cell, cell]
+      allow(gameboard).to receive(:retrieve_column).and_return(array_of_cells)
+      expect(cell).to receive(:change_state)
+      gameboard.take_cell(col_number, player)
     end
   end
 end
 
 describe Cell do
-  # Cell contains no other method besides initialize
+  let(:cell) { described_class.new(1) }
+
+  describe '#change_state' do
+    it "changes a Cell's state to given color" do
+      color = 'r'
+      expect { cell.change_state(color) }.to change(cell, :state).to('r')
+    end
+  end
 end
