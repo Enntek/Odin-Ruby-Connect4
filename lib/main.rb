@@ -30,5 +30,11 @@ We need to test what, not how.
 Remember to write integration tests at the end.
 Check for win and draw from beginning of game.
 
+Write additional tests for edge cases for your methods. Such
+as #retrieve_row and #retrieve_column
 
+
+Something is broken with #check_row. It gets stuck when we run main.
+However, when we pry into it, it seems to run fine. Very weird.
+Figure out what's making it hang in #check_row.
 "

@@ -7,7 +7,7 @@ class ConnectFour
   include Display
   include ValidInput
 
-  attr_reader :player1, :player2, :current_player, :gameboard, :game_over, :last_move
+  attr_reader :player1, :player2, :current_player, :gameboard, :game_over, :latest_cell
 
   def initialize(gameboard = nil, player1 = nil, player2 = nil)
     @gameboard = gameboard || GameBoard.new
@@ -34,12 +34,15 @@ class ConnectFour
     execute_turn
     draw_board
     check_draw
+
+    # gameboard.check_row(latest_cell)
+
     # check_win
     switch_current_player
   end
 
   def check_win
-    gameboard.any_4_in_a_row?(last_move)
+    gameboard.any_4_in_a_row?(latest_cell)
   end
 
   def check_draw
@@ -71,7 +74,7 @@ class ConnectFour
   def move_piece(col_number)
     free_cell = gameboard.locate_free_cell(col_number)
     gameboard.take_cell(free_cell, current_player.color)
-    @last_move = free_cell
+    @latest_cell = free_cell
   end
 
   def input_column_number

@@ -29,6 +29,12 @@ class GameBoard
      [6, 13, 20, 27, 34, 41]]
   end
 
+  def retrieve_column(col_number = 1)
+    columns[col_number].map do |number|
+      cells[number]
+    end
+  end
+
   def rows
     [[0, 1, 2, 3, 4, 5, 6],
      [7, 8, 9, 10, 11, 12, 13],
@@ -38,11 +44,12 @@ class GameBoard
      [35, 36, 37, 38, 39, 40, 41]]
   end
 
-  def retrieve_column(col_number = 1)
-    columns[col_number].map do |number|
-      cells[number]
-    end
+  def retrieve_row(latest_cell)
+    number = latest_cell.number
+    rows.find { |subarray| subarray.include?(number)}
   end
+
+  
 
   def column_full?(col_number)
     column_array = retrieve_column(col_number)
@@ -70,7 +77,7 @@ class GameBoard
     cell.change_state(color)
   end
 
-  def any_4_in_a_row?(last_move)
+  def any_4_in_a_row?(latest_cell)
     # we have our last_move
     # we have cells
     # check row
@@ -78,8 +85,29 @@ class GameBoard
     # check both diagonals
   end
 
-  # delete later
-  def check_row(last_move)
-    
+  def check_row(latest_cell)
+
+    # require 'pry-byebug'
+    # binding.pry
+
+    row = retrieve_row(latest_cell)
+    last_num = latest_cell.number
+    last_color = latest_cell.state
+    next_num = last_num
+    counter = 1
+    loop do
+      next_num -= 1 if row.include?(next_num - 1)
+      break if next_num.nil?
+
+      if cells[next_num].state == last_color
+        counter += 1
+      else
+        break
+      end
+    end
+
+    if counter > 2
+      puts 'greater than 2!'
+    end
   end
 end

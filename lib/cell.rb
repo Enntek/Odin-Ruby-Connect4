@@ -7,7 +7,7 @@
 
 # A Connect Four board has 42 cells (6 high, 7 across)
 class Cell
-  attr_reader :state
+  attr_reader :state, :number
 
   def initialize(number, state = ' ')
     @number = number

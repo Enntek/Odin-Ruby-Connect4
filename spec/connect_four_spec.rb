@@ -399,14 +399,25 @@ describe GameBoard do
   end
 
   describe '#any_4_in_a_row?' do
-    it 'returns true if there are 4 consecutive colors' do
+    it 'returns true if there are 4 gconsecutive colors' do
 
     end
   end
 
-  describe check_row do
+  describe '#retrieve_row' do
+    let(:gameboard) { described_class.new }
+    let(:cell) { instance_double(Cell, number: 24) }
+
+    it 'returns an array of numbers that represent a row' do
+      latest_cell = cell
+      result = gameboard.retrieve_row(latest_cell)
+      expect(result).to include(21..27)
+    end
+  end
+
+  describe '#check_row' do
     context 'when there is a 4-in-a-row' do
-      it 'returns true' do
+      xit 'returns true' do
 
       end
     end
