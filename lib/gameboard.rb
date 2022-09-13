@@ -87,53 +87,43 @@ class GameBoard
 
   def check_row(latest_cell)
     direction = -1
+    reverse_direction = 1
     row = retrieve_row(latest_cell)
     last_num = latest_cell.number
     last_color = latest_cell.state
 
-    check_row2(latest_cell, row, last_num, last_color, direction)
+    counter = 1
 
-    # call this inbetween
-    # next_num = last_num
+    value1 = check_row2(row, last_num, last_color, direction) || 0
+    value2 = check_row2(row, last_num, last_color, reverse_direction) || 0
 
+
+    counter += value1 + value2
+
+    puts ['counter', counter]
   end
 
-  def check_row2(latest_cell, row, last_num, last_color, direction)
+  def check_row2(row, last_num, last_color, direction)
 
-
-    # row = retrieve_row(latest_cell)
-    # last_num = latest_cell.number
-    # last_color = latest_cell.state
     next_num = last_num
-    counter = 1
+    counter = 0
 
     # abstraction
     # direction = -1
-    
 
     loop do
       puts 'entered loop-start'
-
       # next_num += direction if row.include?(next_num + direction)
       next_num = row.include?(next_num + direction) ? (next_num + direction) : nil
       break if next_num.nil?
-
-      puts 'entered loop-mid'
-
+      # puts 'entered loop-mid'
       if cells[next_num].state == last_color
-
-        puts 'entered loop-deep'
-
+        # puts 'entered loop-deep'
         counter += 1
-        puts ['counter', counter]
-        if counter == 4
-          puts "That's four in a row!"
-          break
-        end
       else
         break
       end
     end
+    counter
   end
-
 end
