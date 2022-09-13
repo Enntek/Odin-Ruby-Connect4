@@ -83,32 +83,39 @@ class GameBoard
     # check row
     # check column
     # check both diagonals
-    
   end
 
   def check_row(latest_cell)
-
-    check_row_algo(row, last_color, )
-  end
-
-  def check_row_algo
+    direction = -1
     row = retrieve_row(latest_cell)
     last_num = latest_cell.number
     last_color = latest_cell.state
+
+    check_row2(latest_cell, row, last_num, last_color, direction)
+
+    # call this inbetween
+    # next_num = last_num
+
+  end
+
+  def check_row2(latest_cell, row, last_num, last_color, direction)
+
+
+    # row = retrieve_row(latest_cell)
+    # last_num = latest_cell.number
+    # last_color = latest_cell.state
     next_num = last_num
     counter = 1
 
     # abstraction
-    direction = -1
-    direction = 1
-
-    # call this inbetween
-    next_num = last_num
+    # direction = -1
+    
 
     loop do
       puts 'entered loop-start'
 
-      next_num += direction if row.include?(next_num + direction)
+      # next_num += direction if row.include?(next_num + direction)
+      next_num = row.include?(next_num + direction) ? (next_num + direction) : nil
       break if next_num.nil?
 
       puts 'entered loop-mid'
@@ -128,4 +135,5 @@ class GameBoard
       end
     end
   end
+
 end
