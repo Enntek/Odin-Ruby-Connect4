@@ -29,6 +29,15 @@ class GameBoard
      [6, 13, 20, 27, 34, 41]]
   end
 
+  def rows
+    [[0, 1, 2, 3, 4, 5, 6],
+     [7, 8, 9, 10, 11, 12, 13],
+     [14, 15, 16, 17, 18, 19, 20],
+     [21, 22, 23, 24, 25, 26, 27],
+     [28, 29, 30, 31, 32, 33, 34],
+     [35, 36, 37, 38, 39, 40, 41]]
+  end
+
   def retrieve_column(col_number = 1)
     columns[col_number].map do |number|
       cells[number]
@@ -53,12 +62,24 @@ class GameBoard
   end
 
   def locate_free_cell(col_number)
-    column = retrieve_column(col_number)
-    column.find { |cell| cell.state == ' ' } # .find matches 1 item only
+    column_array = retrieve_column(col_number)
+    column_array.find { |cell| cell.state == ' ' } # .find matches 1 item only
   end
 
-  def take_cell(color)
-    free_cell.change_state(color)
+  def take_cell(cell, color)
+    cell.change_state(color)
+  end
+
+  def any_4_in_a_row?(last_move)
+    # we have our last_move
+    # we have cells
+    # check row
+    # check column
+    # check both diagonals
+  end
+
+  # delete later
+  def check_row(last_move)
+    
   end
 end
-

@@ -152,13 +152,19 @@ describe ConnectFour do
 
     describe '#move_piece' do
       let(:gameboard) { instance_double(GameBoard) }
-      let(:player1) { instance_double(Player, color: 'r') }
-      let(:player2) { instance_double(Player, color: 'b') }
-      let(:game) { described_class.new(gameboard, player1, player2) }
-
-      it 'calls #take_cell' do
+      let(:game) { described_class.new(gameboard) }
+      
+      it 'calls locate_free_cell to find the free cell in a given column' do
         col_number = 1
-        expect(game.gameboard).to receive(:take_cell)
+        allow(gameboard).to receive(:take_cell)
+        expect(gameboard).to receive(:locate_free_cell)
+        game.move_piece(col_number)
+      end
+
+      it 'calls take_cell' do
+        col_number = 1
+        allow(gameboard).to receive(:locate_free_cell)
+        expect(gameboard).to receive(:take_cell)
         game.move_piece(col_number)
       end
     end
@@ -195,15 +201,14 @@ describe ConnectFour do
   end
 
   describe '#check_win' do
-    let(:game) { described_class.new }
+    let(:gameboard) { instance_double(GameBoard) }
+    let(:game) { described_class.new(gameboard) }
+    let(:cell) { instance_double(Cell)}
 
-    xit 'returns false if no player has 4 pieces in a row' do
-      expect(game.check_win).to be(false)
-      
-    end
-
-    xit 'returns true if a player has 4 pieces in a row' do
-      expect(game.check_win).to be(true)
+    it 'sends a message to gameboard.any_4_in_a_row?' do
+      last_move = cell
+      expect(gameboard).to receive(:any_4_in_a_row?)
+      game.check_win
     end
   end
 end
@@ -268,6 +273,7 @@ end
 
 describe GameBoard do
   let(:gameboard) { described_class.new }
+
   describe '#create_cells' do
     it 'returns an array' do
       expect(gameboard.create_cells).to be_kind_of(Array)
@@ -319,70 +325,95 @@ describe GameBoard do
         gameboard.column_full?(col_number)
       end
     end
+  end
 
-    describe '#totally_occupied?' do
-      context 'when array contains at least 1 free cell' do
-        let(:cell) { instance_double(Cell, state: ' ') }
 
-        it 'returns false' do
-          array_of_cells = [cell, cell, cell]
+  describe '#totally_occupied?' do
+    context 'when array contains at least 1 free cell' do
+      let(:cell) { instance_double(Cell, state: ' ') }
 
-          result = gameboard.totally_occupied?(array_of_cells)
-          expect(result).to eq(false)
-        end
-      end
+      it 'returns false' do
+        array_of_cells = [cell, cell, cell]
 
-      context 'when all cells in array are occupied' do
-        let(:cell) { instance_double(Cell, state: 'r') }
-
-        it 'returns false if array has at least 1 free cell' do
-          array_of_cells = [cell, cell, cell]
-
-          result = gameboard.totally_occupied?(array_of_cells)
-          expect(result).to eq(true)
-        end
+        result = gameboard.totally_occupied?(array_of_cells)
+        expect(result).to eq(false)
       end
     end
 
-    describe '#board_full?' do
-      context 'when board is not full' do
-        let(:gameboard) { described_class.new }
-  
-        it 'returns false' do
-          allow(gameboard).to receive(:totally_occupied?).and_return(false)
-          expect(gameboard.board_full?).to be(false)
-        end
+    context 'when all cells in array are occupied' do
+      let(:cell) { instance_double(Cell, state: 'r') }
+
+      it 'returns false if array has at least 1 free cell' do
+        array_of_cells = [cell, cell, cell]
+
+        result = gameboard.totally_occupied?(array_of_cells)
+        expect(result).to eq(true)
       end
+    end
+  end
 
-      context 'when board is full' do
-        let(:gameboard) { described_class.new }
+  describe '#board_full?' do
+    context 'when board is not full' do
+      let(:gameboard) { described_class.new }
 
-        it 'returns true' do
-          allow(gameboard).to receive(:totally_occupied?).and_return(true)
-          expect(gameboard.board_full?).to be(true)
-        end
+      it 'returns false' do
+        allow(gameboard).to receive(:totally_occupied?).and_return(false)
+        expect(gameboard.board_full?).to be(false)
+      end
+    end
+
+    context 'when board is full' do
+      let(:gameboard) { described_class.new }
+
+      it 'returns true' do
+        allow(gameboard).to receive(:totally_occupied?).and_return(true)
+        expect(gameboard.board_full?).to be(true)
       end
     end
   end
 
   describe 'locate_free_cell' do
-    xit 'returns Cell object whose state is empty in given column' do
-      
-  end
-
-  describe '#take_cell' do
-    let(:player) { instance_double(Player, color: 'r') }
     let(:cell) { instance_double(Cell, state: ' ') }
     let(:gameboard) { described_class.new }
 
+
+    it 'returns Cell object whose state is empty in given column' do
+      col_number = 1
+      array_of_cells = [cell, cell, cell]
+      allow(gameboard).to receive(:retrieve_column).and_return(array_of_cells)
+
+      result = gameboard.locate_free_cell(col_number)
+      expect(result).to eq(cell)
+    end
+  end
+
+  describe '#take_cell' do
+    let(:cell) { instance_double(Cell) }
+    let(:gameboard) { described_class.new }
+
     it 'calls change_state on a free cell' do
-      # col_number = 1
-      # array_of_cells = [cell, cell, cell]
-      # allow(gameboard).to receive(:retrieve_column).and_return(array_of_cells)
-      # expect(cell).to receive(:change_state)
-      # gameboard.take_cell(col_number, player)
-      expect(game_board.free_cell).to receive(:change_state)
-      gameboard.take_cell
+      color = 'b'
+      expect(cell).to receive(:change_state).with(color)
+      gameboard.take_cell(cell, color)
+    end
+  end
+
+  describe '#any_4_in_a_row?' do
+    it 'returns true if there are 4 consecutive colors' do
+
+    end
+  end
+
+  describe check_row do
+    context 'when there is a 4-in-a-row' do
+      it 'returns true' do
+
+      end
+    end
+
+    context 'when there is not a 4-in-a-row' do
+      xit 'returns false' do
+      end
     end
   end
 end
