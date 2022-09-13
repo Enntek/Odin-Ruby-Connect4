@@ -88,9 +88,6 @@ class GameBoard
   def check_row(latest_cell)
 
     check_row_algo(row, last_color, )
-
-
-
   end
 
   def check_row_algo
