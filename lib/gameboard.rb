@@ -42,16 +42,7 @@ class GameBoard
     send(type).find { |subarray| subarray.include?(number) }
   end
 
-  # returns column array given cell
-  # def retrieve_column(latest_cell)
-  #   number = latest_cell.number
-  #   columns.find { |subarray| subarray.include?(number)}
-  # end
 
-    # def retrieve_row(latest_cell)
-  #   number = latest_cell.number
-  #   rows.find { |subarray| subarray.include?(number)}
-  # end
 
   def rows
     [[0, 1, 2, 3, 4, 5, 6],
@@ -90,45 +81,23 @@ class GameBoard
 
   def any_4_in_a_row?(latest_cell)
     # check_row(latest_cell)
-    check_column(latest_cell)
+    # check_column(latest_cell)
 
-    row_offset = 1
-    column_offset = 7
-
-    # check_4_consecutive(row)
-    # check_4_consecutive(column)
+    check_connect_four(latest_cell, 'rows')
+    check_connect_four(latest_cell, 'columns')
 
   end
 
-  def check_4_consecutive
-
-  end
-
-  def check_row(latest_cell)
-    offset = 1
+  def check_connect_four(latest_cell, type)
+    offset = 1 if type == 'rows'
+    offset = 7 if type == 'columns'
     reverse_offset = offset * -1
-    # row = retrieve_row(latest_cell)
-    row = retrieve_line(latest_cell, 'rows')
+    line_array = retrieve_line(latest_cell, type)
     last_num = latest_cell.number
     last_color = latest_cell.state
     counter = 1
-    tally1 = check_cell_array(row, last_num, last_color, offset) || 0
-    tally2 = check_cell_array(row, last_num, last_color, reverse_offset) || 0
-    counter += tally1 + tally2
-    puts "That's Connect Four!" if counter == 4
-    puts ['counter', counter]
-  end
-
-  def check_column(latest_cell)
-    offset = 7
-    reverse_offset = offset * -1
-    column = retrieve_line(latest_cell, 'columns')
-    # column = retrieve_column(latest_cell)
-    last_num = latest_cell.number
-    last_color = latest_cell.state
-    counter = 1
-    tally1 = check_cell_array(column, last_num, last_color, offset) || 0
-    tally2 = check_cell_array(column, last_num, last_color, reverse_offset) || 0
+    tally1 = check_cell_array(line_array, last_num, last_color, offset) || 0
+    tally2 = check_cell_array(line_array, last_num, last_color, reverse_offset) || 0
     counter += tally1 + tally2
     puts "That's Connect Four!" if counter == 4
     puts ['counter', counter]
@@ -139,8 +108,7 @@ class GameBoard
     counter = 0
 
     loop do
-      puts 'entered loop-start'
-      # next_num += offset if row.include?(next_num + offset)
+      # puts 'entered loop-start'
       next_num = cell_array.include?(next_num + offset) ? (next_num + offset) : nil
       break if next_num.nil?
 
