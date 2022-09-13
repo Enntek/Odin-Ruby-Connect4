@@ -7,7 +7,7 @@ require_relative 'cell'
 require_relative 'display'
 
 game = ConnectFour.new
-# game.gameboard.columns
+game.play_game
 
 # gameboard = GameBoard.new
 # gameboard.free_cell?(1)
@@ -26,4 +26,9 @@ We need to use a counter.
 Change state from ' ' to something meaningful
 
 We need to test what, not how.
+
+Remember to write integration tests at the end.
+Check for win and draw from beginning of game.
+
+
 "

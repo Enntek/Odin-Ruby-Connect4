@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# require_relative 'connect_four'
-# require_relative 'player'
-# require_relative 'cell'
 require_relative 'display'
 
 # A Connect Four board has 42 cells (6 high, 7 across)
@@ -38,47 +35,30 @@ class GameBoard
     end
   end
 
-  def free_cell?(col_number)
-    column = retrieve_column(col_number)
-    free_cell = column.find { |cell| cell.state == ' ' } # find returns first match only
-    column_full_message if free_cell.nil?
-    true unless free_cell.nil?
+  def column_full?(col_number)
+    column_array = retrieve_column(col_number)
+    result = totally_occupied?(column_array)
+    column_full_message if result
+    result
   end
 
-  def take_cell(col_number, color)
+  def board_full?
+    cells_array = cells
+    result = totally_occupied?(cells_array)
+  end
+
+  def totally_occupied?(cells_array)
+    free = ' '
+    cells_array.none? { |cell| cell.state == free }
+  end
+
+  def locate_free_cell(col_number)
     column = retrieve_column(col_number)
-    free_cell = column.find { |cell| cell.state == ' ' } # find returns first match only
+    column.find { |cell| cell.state == ' ' } # .find matches 1 item only
+  end
+
+  def take_cell(color)
     free_cell.change_state(color)
   end
 end
 
-
-###
-
-# class GameBoard
-#   extend Forwardable
-#   include Enumerable
-#   def_delegators :@cells, :size, :each
-
-#   attr_reader :cells
-
-#   def initialize
-#     @cells = create_cells
-#   end
-
-#   Cell = Struct.new(:number, :state) do
-#     def to_s
-#       "#{state}"
-#     end
-#   end
-
-#   def create_cells(all_cells = Array.new(9))
-#     all_cells.map.with_index do |element, index|
-#       Cell.new(index, ' ')
-#     end
-#   end
-
-#   def change_cell_state(valid_number, player_side)
-#     cells[valid_number].state = player_side
-#   end
-# end

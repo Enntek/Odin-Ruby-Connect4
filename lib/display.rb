@@ -2,7 +2,7 @@
 
 # This module prints the game to the console
 module Display
-  
+
   def greeting
     puts 'Welcome to Connect Four!'
   end
@@ -33,6 +33,10 @@ module Display
   def column_full_message
     puts 'This column is full! Please select another column.'.bg_red
   end
+
+  def game_draw_message
+    puts "The board is completely full and nobody won. It's a draw!"
+  end
 end
 
 # This module makes sure user input matches given criteria
@@ -48,7 +52,6 @@ module ValidInput
 
       invalid_input_message
     end
-
     user_input
   end
 end

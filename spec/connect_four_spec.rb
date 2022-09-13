@@ -24,10 +24,6 @@ describe ConnectFour do
       end
     end
 
-    # When we initialize ConnectFour, we want to be able to 
-    # initialize Gameboard, and use our own instance variable here
-    # in testing, to represent that instance of GameBoard, to spy on it.
-
     context 'when we want to use an instance_double of GameBoard' do
       let(:gameboard) { instance_double(GameBoard) }
       let(:p1) { instance_double(Player) }
@@ -109,7 +105,7 @@ describe ConnectFour do
     context 'when input is valid' do
       it 'completes loop' do
         allow(game).to receive(:gets).and_return('1')
-        allow(game.gameboard).to receive(:free_cell?).and_return(true)
+        allow(game.gameboard).to receive(:column_full?).and_return(false)
         allow(game).to receive(:puts)
         expect(game).to receive(:move_piece)
         game.execute_turn
@@ -119,8 +115,8 @@ describe ConnectFour do
         good_input = '4'
         allow(game).to receive(:gets).and_return(good_input)
         allow(game).to receive(:puts)
-        allow(game.gameboard).to receive(:free_cell?).and_return(true)
-        
+        allow(game.gameboard).to receive(:column_full?).and_return(false)
+
         expect(game).to receive(:move_piece)
         game.execute_turn
       end
@@ -132,7 +128,7 @@ describe ConnectFour do
         good_input = '4'
         allow(game).to receive(:gets).and_return(bad_input, good_input)
         allow(game).to receive(:puts)
-        allow(game.gameboard).to receive(:free_cell?).and_return(true)
+        allow(game.gameboard).to receive(:column_full?).and_return(false)
         allow(game).to receive(:move_piece)
 
         expect(game).to receive(:invalid_input_message).once
@@ -146,11 +142,24 @@ describe ConnectFour do
         good_input = '4'
         allow(game).to receive(:gets).and_return(bad_input, bad_input, good_input)
         allow(game).to receive(:puts)
-        allow(game.gameboard).to receive(:free_cell?).and_return(true)
+        allow(game.gameboard).to receive(:column_full?).and_return(false)
         allow(game).to receive(:move_piece)
   
         expect(game).to receive(:invalid_input_message).twice
         game.execute_turn
+      end
+    end
+
+    describe '#move_piece' do
+      let(:gameboard) { instance_double(GameBoard) }
+      let(:player1) { instance_double(Player, color: 'r') }
+      let(:player2) { instance_double(Player, color: 'b') }
+      let(:game) { described_class.new(gameboard, player1, player2) }
+
+      it 'calls #take_cell' do
+        col_number = 1
+        expect(game.gameboard).to receive(:take_cell)
+        game.move_piece(col_number)
       end
     end
   end
@@ -164,22 +173,37 @@ describe ConnectFour do
   end
 
   describe '#check_draw' do
-    xit 'returns false if there are free cells' do
+    let(:gameboard) { instance_double(GameBoard) }
+    let(:game) { described_class.new(gameboard) }
 
-    end
-
-    xit 'returns true if all cells are occupied' do
-
+    it 'sends #board_full? to gameboard' do
+      expect(gameboard).to receive(:board_full?)
+      game.check_draw
     end
   end
 
-  describe '#check_win' do
-    xit 'returns false if no player has 4 pieces in a row' do
+  describe '#end_game' do
+    let(:game) { described_class.new }
 
+    it 'sets @game_over to true' do
+      expect { game.end_game }.to change(game, :game_over).from(false).to(true)
+    end
+  end
+
+  describe '#game_over?' do
+    # This is a simple true false conditional, it shouldn't be tested.
+  end
+
+  describe '#check_win' do
+    let(:game) { described_class.new }
+
+    xit 'returns false if no player has 4 pieces in a row' do
+      expect(game.check_win).to be(false)
+      
     end
 
     xit 'returns true if a player has 4 pieces in a row' do
-
+      expect(game.check_win).to be(true)
     end
   end
 end
@@ -221,9 +245,6 @@ describe Player do
         expect { player.establish_color }.to change(player, :color).from(nil).to('b')
       end
     end
-
-    # context 'when player1 picks blue, player2 is red automatically' do
-    # end
   end
 
   describe '#takes_other_color' do
@@ -260,9 +281,25 @@ describe GameBoard do
     end
   end
 
-  describe '#free_cells?' do
+  describe '#column_full?' do
     context 'when given column has at least one free cell' do
       let(:cell) { instance_double(Cell, state: ' ') }
+
+      before do
+        array_with_one_cell = [cell]
+        allow(gameboard).to receive(:puts)
+        allow(gameboard).to receive(:retrieve_column).and_return(array_with_one_cell)
+      end
+
+      it 'returns nil' do
+        col_number = 1
+        return_value = gameboard.column_full?(col_number)
+        expect(return_value).to be false
+      end
+    end
+
+    context 'when given column has no free cells (is full)' do
+      let(:cell) { instance_double(Cell, state: 'r') }
 
       before do
         array_with_one_cell = [cell]
@@ -271,38 +308,81 @@ describe GameBoard do
 
       it 'returns true' do
         col_number = 1
-        return_value = gameboard.free_cell?(col_number)
+        allow(gameboard).to receive(:puts)
+        return_value = gameboard.column_full?(col_number)
         expect(return_value).to be true
       end
-    end
 
-    context 'when given column has no free cells' do
-      let(:cell) { instance_double(Cell, state: 'red') }
-
-      before do
-        array_with_one_cell = [cell]
-        allow(gameboard).to receive(:puts)
-        allow(gameboard).to receive(:retrieve_column).and_return(array_with_one_cell)
-      end
-
-      it 'returns false' do
+      it 'receives 1 error message' do
         col_number = 1
-        return_value = gameboard.free_cell?(col_number)
-        expect(return_value).to be_nil
+        expect(gameboard).to receive(:column_full_message).exactly(1).time
+        gameboard.column_full?(col_number)
       end
     end
+
+    describe '#totally_occupied?' do
+      context 'when array contains at least 1 free cell' do
+        let(:cell) { instance_double(Cell, state: ' ') }
+
+        it 'returns false' do
+          array_of_cells = [cell, cell, cell]
+
+          result = gameboard.totally_occupied?(array_of_cells)
+          expect(result).to eq(false)
+        end
+      end
+
+      context 'when all cells in array are occupied' do
+        let(:cell) { instance_double(Cell, state: 'r') }
+
+        it 'returns false if array has at least 1 free cell' do
+          array_of_cells = [cell, cell, cell]
+
+          result = gameboard.totally_occupied?(array_of_cells)
+          expect(result).to eq(true)
+        end
+      end
+    end
+
+    describe '#board_full?' do
+      context 'when board is not full' do
+        let(:gameboard) { described_class.new }
+  
+        it 'returns false' do
+          allow(gameboard).to receive(:totally_occupied?).and_return(false)
+          expect(gameboard.board_full?).to be(false)
+        end
+      end
+
+      context 'when board is full' do
+        let(:gameboard) { described_class.new }
+
+        it 'returns true' do
+          allow(gameboard).to receive(:totally_occupied?).and_return(true)
+          expect(gameboard.board_full?).to be(true)
+        end
+      end
+    end
+  end
+
+  describe 'locate_free_cell' do
+    xit 'returns Cell object whose state is empty in given column' do
+      
   end
 
   describe '#take_cell' do
     let(:player) { instance_double(Player, color: 'r') }
     let(:cell) { instance_double(Cell, state: ' ') }
+    let(:gameboard) { described_class.new }
 
     it 'calls change_state on a free cell' do
-      col_number = 1
-      array_of_cells = [cell, cell, cell]
-      allow(gameboard).to receive(:retrieve_column).and_return(array_of_cells)
-      expect(cell).to receive(:change_state)
-      gameboard.take_cell(col_number, player)
+      # col_number = 1
+      # array_of_cells = [cell, cell, cell]
+      # allow(gameboard).to receive(:retrieve_column).and_return(array_of_cells)
+      # expect(cell).to receive(:change_state)
+      # gameboard.take_cell(col_number, player)
+      expect(game_board.free_cell).to receive(:change_state)
+      gameboard.take_cell
     end
   end
 end
