@@ -87,27 +87,47 @@ class GameBoard
 
   def check_row(latest_cell)
 
-    # require 'pry-byebug'
-    # binding.pry
+    check_row_algo(row, last_color, )
 
+
+
+  end
+
+  def check_row_algo
     row = retrieve_row(latest_cell)
     last_num = latest_cell.number
     last_color = latest_cell.state
     next_num = last_num
     counter = 1
+
+    # abstraction
+    direction = -1
+    direction = 1
+
+    # call this inbetween
+    next_num = last_num
+
     loop do
-      next_num -= 1 if row.include?(next_num - 1)
+      puts 'entered loop-start'
+
+      next_num += direction if row.include?(next_num + direction)
       break if next_num.nil?
 
+      puts 'entered loop-mid'
+
       if cells[next_num].state == last_color
+
+        puts 'entered loop-deep'
+
         counter += 1
+        puts ['counter', counter]
+        if counter == 4
+          puts "That's four in a row!"
+          break
+        end
       else
         break
       end
-    end
-
-    if counter > 2
-      puts 'greater than 2!'
     end
   end
 end
