@@ -29,11 +29,29 @@ class GameBoard
      [6, 13, 20, 27, 34, 41]]
   end
 
-  def retrieve_column(col_number = 1)
+  # returns column array given col_number
+  def find_column(col_number = 1)
     columns[col_number].map do |number|
       cells[number]
     end
   end
+
+  # returns #rows or #columnn (type)
+  def retrieve_line(latest_cell, type)
+    number = latest_cell.number
+    send(type).find { |subarray| subarray.include?(number) }
+  end
+
+  # returns column array given cell
+  # def retrieve_column(latest_cell)
+  #   number = latest_cell.number
+  #   columns.find { |subarray| subarray.include?(number)}
+  # end
+
+    # def retrieve_row(latest_cell)
+  #   number = latest_cell.number
+  #   rows.find { |subarray| subarray.include?(number)}
+  # end
 
   def rows
     [[0, 1, 2, 3, 4, 5, 6],
@@ -44,15 +62,8 @@ class GameBoard
      [35, 36, 37, 38, 39, 40, 41]]
   end
 
-  def retrieve_row(latest_cell)
-    number = latest_cell.number
-    rows.find { |subarray| subarray.include?(number)}
-  end
-
-  
-
   def column_full?(col_number)
-    column_array = retrieve_column(col_number)
+    column_array = find_column(col_number)
     result = totally_occupied?(column_array)
     column_full_message if result
     result
@@ -69,7 +80,7 @@ class GameBoard
   end
 
   def locate_free_cell(col_number)
-    column_array = retrieve_column(col_number)
+    column_array = find_column(col_number)
     column_array.find { |cell| cell.state == ' ' } # .find matches 1 item only
   end
 
@@ -78,44 +89,61 @@ class GameBoard
   end
 
   def any_4_in_a_row?(latest_cell)
-    # we have our last_move
-    # we have cells
-    # check row
-    # check column
-    # check both diagonals
+    # check_row(latest_cell)
+    check_column(latest_cell)
+
+    row_offset = 1
+    column_offset = 7
+
+    # check_4_consecutive(row)
+    # check_4_consecutive(column)
+
+  end
+
+  def check_4_consecutive
+
   end
 
   def check_row(latest_cell)
-    direction = -1
-    reverse_direction = 1
-    row = retrieve_row(latest_cell)
+    offset = 1
+    reverse_offset = offset * -1
+    # row = retrieve_row(latest_cell)
+    row = retrieve_line(latest_cell, 'rows')
     last_num = latest_cell.number
     last_color = latest_cell.state
-
     counter = 1
-
-    value1 = check_row2(row, last_num, last_color, direction) || 0
-    value2 = check_row2(row, last_num, last_color, reverse_direction) || 0
-
-
-    counter += value1 + value2
-
+    tally1 = check_cell_array(row, last_num, last_color, offset) || 0
+    tally2 = check_cell_array(row, last_num, last_color, reverse_offset) || 0
+    counter += tally1 + tally2
+    puts "That's Connect Four!" if counter == 4
     puts ['counter', counter]
   end
 
-  def check_row2(row, last_num, last_color, direction)
+  def check_column(latest_cell)
+    offset = 7
+    reverse_offset = offset * -1
+    column = retrieve_line(latest_cell, 'columns')
+    # column = retrieve_column(latest_cell)
+    last_num = latest_cell.number
+    last_color = latest_cell.state
+    counter = 1
+    tally1 = check_cell_array(column, last_num, last_color, offset) || 0
+    tally2 = check_cell_array(column, last_num, last_color, reverse_offset) || 0
+    counter += tally1 + tally2
+    puts "That's Connect Four!" if counter == 4
+    puts ['counter', counter]
+  end
 
+  def check_cell_array(cell_array, last_num, last_color, offset)
     next_num = last_num
     counter = 0
 
-    # abstraction
-    # direction = -1
-
     loop do
       puts 'entered loop-start'
-      # next_num += direction if row.include?(next_num + direction)
-      next_num = row.include?(next_num + direction) ? (next_num + direction) : nil
+      # next_num += offset if row.include?(next_num + offset)
+      next_num = cell_array.include?(next_num + offset) ? (next_num + offset) : nil
       break if next_num.nil?
+
       # puts 'entered loop-mid'
       if cells[next_num].state == last_color
         # puts 'entered loop-deep'

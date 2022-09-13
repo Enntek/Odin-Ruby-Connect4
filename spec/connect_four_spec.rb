@@ -282,7 +282,7 @@ describe GameBoard do
 
   describe '#column_of_cells' do
     it 'returns an array of Cell objects' do
-      array = gameboard.retrieve_column
+      array = gameboard.find_column
       expect(array).to be_kind_of(Array)
     end
   end
@@ -294,7 +294,7 @@ describe GameBoard do
       before do
         array_with_one_cell = [cell]
         allow(gameboard).to receive(:puts)
-        allow(gameboard).to receive(:retrieve_column).and_return(array_with_one_cell)
+        allow(gameboard).to receive(:find_column).and_return(array_with_one_cell)
       end
 
       it 'returns nil' do
@@ -309,7 +309,7 @@ describe GameBoard do
 
       before do
         array_with_one_cell = [cell]
-        allow(gameboard).to receive(:retrieve_column).and_return(array_with_one_cell)
+        allow(gameboard).to receive(:find_column).and_return(array_with_one_cell)
       end
 
       it 'returns true' do
@@ -380,7 +380,7 @@ describe GameBoard do
     it 'returns Cell object whose state is empty in given column' do
       col_number = 1
       array_of_cells = [cell, cell, cell]
-      allow(gameboard).to receive(:retrieve_column).and_return(array_of_cells)
+      allow(gameboard).to receive(:find_column).and_return(array_of_cells)
 
       result = gameboard.locate_free_cell(col_number)
       expect(result).to eq(cell)
@@ -416,6 +416,19 @@ describe GameBoard do
   end
 
   describe '#check_row' do
+    context 'when there is a 4-in-a-row' do
+      xit 'returns true' do
+
+      end
+    end
+
+    context 'when there is not a 4-in-a-row' do
+      xit 'returns false' do
+      end
+    end
+  end
+
+  describe '#check_column' do
     context 'when there is a 4-in-a-row' do
       xit 'returns true' do
 

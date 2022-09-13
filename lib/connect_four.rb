@@ -35,9 +35,9 @@ class ConnectFour
     draw_board
     check_draw
 
-    gameboard.check_row(latest_cell)
+    
 
-    # check_win
+    check_win
     switch_current_player
   end
 
