@@ -3,40 +3,6 @@ require './lib/player'
 require './lib/gameboard'
 require './lib/cell'
 
-# require './lib/temp_class'
-# describe TempClass do
-#   let(:hello) { 'world' }
-
-#   before do
-#     @hey = 'there'
-#     subject.spoon = 'fork'
-#   end
-  
-#   it 'is instantiated by RSpec' do
-#     expect(subject).to be_a(TempClass)
-#   end
-
-#   it 'contains foo' do
-#     expect(subject.foo).to eq('bar')
-#   end
-
-#   it 'contains hello' do
-#     expect(hello).to eq('world')
-#   end
-
-#   it 'contains whats' do
-#     whats = 'up'
-#     expect(whats).to eq('up')
-#   end
-
-#   it 'contains hey' do
-#     puts self.class
-#     expect(@hey).to eq('there')
-    
-#   end
-# end
-
-
 describe ConnectFour do
   # Usually we don't test #initialize, this is for practice
   describe '#initialize' do
@@ -84,9 +50,10 @@ describe ConnectFour do
     end
   end
 
+  # Public Script Method -> No test necessary, but all methods inside should
+  # be tested.
+  # 
   describe '#play_game' do
-    # Public Script Method -> No test necessary, but all methods inside should
-    # be tested.
   end
 
   describe '#choose_color' do
@@ -234,17 +201,7 @@ describe ConnectFour do
     # This is a simple true false conditional, it shouldn't be tested.
   end
 
-  describe '#check_win' do
-    let(:gameboard) { instance_double(GameBoard) }
-    let(:game) { described_class.new(gameboard) }
-    let(:cell) { instance_double(Cell)}
 
-    xit 'sends a message to gameboard.any_4_in_a_row?' do
-      last_move = cell
-      expect(gameboard).to receive(:any_4_in_a_row?)
-      game.check_win
-    end
-  end
 
 
 end
@@ -363,7 +320,6 @@ describe GameBoard do
     end
   end
 
-
   describe '#totally_occupied?' do
     context 'when array contains at least 1 free cell' do
       let(:cell) { instance_double(Cell, state: ' ') }
@@ -478,6 +434,30 @@ describe GameBoard do
     it 'returns an array that contains a " " string' do
       result = gameboard.map_colors_to_array(line_array)
       expect(result).to include(' ')
+    end
+  end
+
+  describe '#match_pattern_array' do
+    context 'when the array contains connect four' do
+      let(:gameboard) { described_class.new }
+      let(:colors_array) { %w[r r r r] }
+      let(:last_color) { 'r' }
+
+      it 'returns true' do
+        result = gameboard.match_pattern_array(colors_array, last_color)
+        expect(result).to be(true)
+      end
+    end
+
+    context 'when the array does not contain connect four' do
+      let(:gameboard) { described_class.new }
+      let(:colors_array) { [' ', ' ', ' ', ' '] }
+      let(:last_color) { 'r' }
+
+      it 'returns nil' do
+        result = gameboard.match_pattern_array(colors_array, last_color)
+        expect(result).to be_nil
+      end
     end
   end
 end

@@ -2,13 +2,13 @@
 
 # This module prints the game to the console
 module Display
-
   def greeting
-    puts 'Welcome to Connect Four!'
+    puts "\n\tWelcome to Connect Four!".bold
   end
 
   def choose_color_message
-    puts "#{player1.name} choose a color: red(r) or blue(b)"
+    puts "\n"
+    puts "#{player1.name} choose a color: red(r) or blue(b)".bg_green
   end
 
   def invalid_input_message
@@ -17,7 +17,7 @@ module Display
 
   def draw_board
     puts "\n"
-    puts "\t  1   2   3   4   5   6   7"
+    puts "\t  1   2   3   4   5   6   7".bold
     puts "\t,---------------------------,"
     (0..41).step(7).reverse_each do |i|
       puts "\t| #{@gameboard.cells[i]} | #{@gameboard.cells[i + 1]} | #{@gameboard.cells[i + 2]} | #{@gameboard.cells[i + 3]} | #{@gameboard.cells[i + 4]} | #{@gameboard.cells[i + 5]} | #{@gameboard.cells[i + 6]} |"
@@ -26,8 +26,10 @@ module Display
     puts "\n"
   end
 
-  def select_column_message
-    puts 'Select a column from 1 - 7:'
+  def select_column_message(current_player)
+    puts "\t#{current_player.name}, it's your turn!".green
+    # puts "\t     Your game piece is ."
+    puts "To place your '#{current_player.color}', select a column from 1 - 7 :".italic
   end
 
   def column_full_message
@@ -35,7 +37,11 @@ module Display
   end
 
   def game_draw_message
-    puts "The board is completely full and nobody won. It's a draw!"
+    puts "The board is completely full and nobody won. It's a draw!\n ".bold
+  end
+
+  def win_message(current_player)
+    puts "Congrats #{current_player.name}! You won!"
   end
 end
 

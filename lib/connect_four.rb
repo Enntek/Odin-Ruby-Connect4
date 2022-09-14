@@ -39,7 +39,9 @@ class ConnectFour
   end
 
   def check_win
-    gameboard.any_connect_four?(latest_cell)
+    result = gameboard.any_connect_four?(latest_cell)
+    win_message(current_player) if result == true
+    end_game if result == true
   end
 
   def check_draw
@@ -75,7 +77,7 @@ class ConnectFour
   end
 
   def input_column_number
-    select_column_message
+    select_column_message(current_player)
     allowable_input = (1..7).to_a
     valid_column_number = validate_input(allowable_input).to_i - 1
   end

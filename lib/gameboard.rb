@@ -75,7 +75,6 @@ class GameBoard
     end
   end
 
-  # returns #rows or #columnns (in type)
   def retrieve_line(latest_cell, type)
     number = latest_cell.number
     send(type).find { |subarray| subarray.include?(number) }
@@ -111,12 +110,10 @@ class GameBoard
     types = ['rows', 'columns', 'diagonals1', 'diagonals2']
     last_color = latest_cell.state
 
-    types.each do |type|
+    types.any? do |type|
       line_array = retrieve_line(latest_cell, type)
       colors_array = map_colors_to_array(line_array)
-      # match_pattern_array(line_array, last_color)
-
-      match_pattern_array(colors_array, last_color)
+      match_pattern_array(colors_array, last_color) # true/nil return
     end
   end
 
@@ -126,17 +123,9 @@ class GameBoard
     end
   end
 
-
-  # split this into two methods
   def match_pattern_array(colors_array, last_color)
-    # arr_with_colors = line_array.map do |cell_number|
-    #   cells[cell_number].state
-    # end
-
-    # use pattern matching to match 4 in a row
     case colors_array
     in [*, ^last_color, ^last_color, ^last_color, ^last_color, *]
-      puts 'You win!'
       return true
     else
     end
