@@ -3,6 +3,40 @@ require './lib/player'
 require './lib/gameboard'
 require './lib/cell'
 
+# require './lib/temp_class'
+# describe TempClass do
+#   let(:hello) { 'world' }
+
+#   before do
+#     @hey = 'there'
+#     subject.spoon = 'fork'
+#   end
+  
+#   it 'is instantiated by RSpec' do
+#     expect(subject).to be_a(TempClass)
+#   end
+
+#   it 'contains foo' do
+#     expect(subject.foo).to eq('bar')
+#   end
+
+#   it 'contains hello' do
+#     expect(hello).to eq('world')
+#   end
+
+#   it 'contains whats' do
+#     whats = 'up'
+#     expect(whats).to eq('up')
+#   end
+
+#   it 'contains hey' do
+#     puts self.class
+#     expect(@hey).to eq('there')
+    
+#   end
+# end
+
+
 describe ConnectFour do
   # Usually we don't test #initialize, this is for practice
   describe '#initialize' do
@@ -211,6 +245,8 @@ describe ConnectFour do
       game.check_win
     end
   end
+
+
 end
 
 describe Player do
@@ -430,26 +466,20 @@ describe GameBoard do
     end
   end
 
+  describe '#map_colors_to_array' do
+    let(:gameboard) { described_class.new }
+    let(:line_array) { [1, 2, 3] }
 
-  # describe '#check_connect_four' do
-  #   context 'when a row has 4 consecutive colors' do
-  #     xit 'returns true' do
+    it 'returns an array' do
+      result = gameboard.map_colors_to_array(line_array)
+      expect(result).to be_kind_of(Array)
+    end
 
-  #     end
-  #   end
-
-  #   context 'when there is not a 4-in-a-row' do
-  #     xit 'returns false' do
-  #     end
-  #   end
-
-  #   context 'when a column has 4 consecutive colors' do
-  #     xit 'returns true' do
-
-  #     end
-  #   end
-  # end
-
+    it 'returns an array that contains a " " string' do
+      result = gameboard.map_colors_to_array(line_array)
+      expect(result).to include(' ')
+    end
+  end
 end
 
 describe Cell do

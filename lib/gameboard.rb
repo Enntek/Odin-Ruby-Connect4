@@ -81,8 +81,6 @@ class GameBoard
     send(type).find { |subarray| subarray.include?(number) }
   end
 
-
-
   def column_full?(col_number)
     column_array = find_column(col_number)
     result = totally_occupied?(column_array)
@@ -115,17 +113,28 @@ class GameBoard
 
     types.each do |type|
       line_array = retrieve_line(latest_cell, type)
-      make_cell_array(line_array, last_color)
+      colors_array = map_colors_to_array(line_array)
+      # match_pattern_array(line_array, last_color)
+
+      match_pattern_array(colors_array, last_color)
     end
   end
 
-  def make_cell_array(line_array, last_color)
+  def map_colors_to_array(line_array)
     arr_with_colors = line_array.map do |cell_number|
       cells[cell_number].state
     end
+  end
+
+
+  # split this into two methods
+  def match_pattern_array(colors_array, last_color)
+    # arr_with_colors = line_array.map do |cell_number|
+    #   cells[cell_number].state
+    # end
 
     # use pattern matching to match 4 in a row
-    case arr_with_colors
+    case colors_array
     in [*, ^last_color, ^last_color, ^last_color, ^last_color, *]
       puts 'You win!'
       return true

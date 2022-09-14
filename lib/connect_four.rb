@@ -17,7 +17,7 @@ class ConnectFour
     @game_over = false
   end
 
-  def play_game    
+  def play_game
     greeting
     choose_color
     draw_board
@@ -34,9 +34,6 @@ class ConnectFour
     execute_turn
     draw_board
     check_draw
-
-    
-
     check_win
     switch_current_player
   end
