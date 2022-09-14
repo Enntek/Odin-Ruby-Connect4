@@ -423,12 +423,6 @@ describe GameBoard do
     end
   end
 
-  describe '#build_diagonal_array' do
-    it 'returns an array' do
-
-    end
-  end
-  
 
   describe '#any_connect_four?' do
     it 'returns true if there are 4 consecutive colors' do

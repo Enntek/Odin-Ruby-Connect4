@@ -38,7 +38,35 @@ class GameBoard
      [6, 13, 20, 27, 34, 41]]
   end
 
-  
+  def diagonals1
+    [[35], 
+     [28, 36], 
+     [21, 29, 37],
+     [14, 22, 30, 38],
+     [7, 15, 23, 31, 39],
+     [0, 8, 16, 24, 32, 40],
+     [1, 9, 17, 25, 33, 41],
+     [2, 10, 18, 26, 34],
+     [3, 11, 19, 27],
+     [4, 12, 20],
+     [5, 13],
+     [6]]
+  end
+
+  def diagonals2
+    [[0],
+     [1, 7],
+     [2, 8, 14],
+     [3, 9, 15, 21],
+     [4, 10, 16, 22, 28],
+     [5, 11, 17, 23, 29, 35],
+     [6, 12, 18, 24, 30, 36],
+     [13, 19, 25, 31, 37],
+     [20, 26, 32, 38],
+     [27, 33, 39],
+     [34, 40],
+     [41]]
+  end
 
   # returns column array given col_number
   def find_column(col_number = 1)
@@ -49,21 +77,11 @@ class GameBoard
 
   # returns #rows or #columnns (in type)
   def retrieve_line(latest_cell, type)
-    puts ['type', type]
-
     number = latest_cell.number
-    send(type).find { |subarray| subarray.include?(number) } unless type == 'diagonal1' || type =='diagonal2'
-    build_diagonal(number, type) unless type == 'rows' || type == 'columns'
+    send(type).find { |subarray| subarray.include?(number) }
   end
 
-  def build_diagonal(number, type)
-    puts 'HELLO WORLD'
-    offset = type == 'diagonal1' ? 9 : 7
-    array = [number]
-    array << (number -= 9) until number < 0
-    array << (number += 9) until number >= 41
-    array.uniq!.select!{ |num| num >= 0 && num <= 41 }.sort!
-  end
+
 
   def column_full?(col_number)
     column_array = find_column(col_number)
@@ -92,8 +110,7 @@ class GameBoard
   end
 
   def any_connect_four?(latest_cell)
-    types = ['rows', 'columns']
-    # types = ['rows', 'columns', 'diagonal1', 'diagonal2']
+    types = ['rows', 'columns', 'diagonals1', 'diagonals2']
     last_color = latest_cell.state
 
     types.each do |type|
@@ -107,6 +124,7 @@ class GameBoard
       cells[cell_number].state
     end
 
+    # use pattern matching to match 4 in a row
     case arr_with_colors
     in [*, ^last_color, ^last_color, ^last_color, ^last_color, *]
       puts 'You win!'
