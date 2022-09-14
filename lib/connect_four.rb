@@ -42,7 +42,7 @@ class ConnectFour
   end
 
   def check_win
-    gameboard.any_4_in_a_row?(latest_cell)
+    gameboard.any_connect_four?(latest_cell)
   end
 
   def check_draw

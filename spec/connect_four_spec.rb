@@ -205,7 +205,7 @@ describe ConnectFour do
     let(:game) { described_class.new(gameboard) }
     let(:cell) { instance_double(Cell)}
 
-    it 'sends a message to gameboard.any_4_in_a_row?' do
+    xit 'sends a message to gameboard.any_4_in_a_row?' do
       last_move = cell
       expect(gameboard).to receive(:any_4_in_a_row?)
       game.check_win
@@ -398,12 +398,6 @@ describe GameBoard do
     end
   end
 
-  describe '#any_4_in_a_row?' do
-    it 'returns true if there are 4 gconsecutive colors' do
-
-    end
-  end
-
   describe '#retrieve_line' do
     let(:gameboard) { described_class.new }
     let(:cell) { instance_double(Cell, number: 24) }
@@ -429,31 +423,39 @@ describe GameBoard do
     end
   end
 
-  describe '#check_row' do
-    context 'when there is a 4-in-a-row' do
-      xit 'returns true' do
+  describe '#build_diagonal_array' do
+    it 'returns an array' do
 
-      end
     end
+  end
+  
 
-    context 'when there is not a 4-in-a-row' do
-      xit 'returns false' do
-      end
+  describe '#any_connect_four?' do
+    it 'returns true if there are 4 consecutive colors' do
+
     end
   end
 
-  describe '#check_column' do
-    context 'when there is a 4-in-a-row' do
-      xit 'returns true' do
 
-      end
-    end
+  # describe '#check_connect_four' do
+  #   context 'when a row has 4 consecutive colors' do
+  #     xit 'returns true' do
 
-    context 'when there is not a 4-in-a-row' do
-      xit 'returns false' do
-      end
-    end
-  end
+  #     end
+  #   end
+
+  #   context 'when there is not a 4-in-a-row' do
+  #     xit 'returns false' do
+  #     end
+  #   end
+
+  #   context 'when a column has 4 consecutive colors' do
+  #     xit 'returns true' do
+
+  #     end
+  #   end
+  # end
+
 end
 
 describe Cell do

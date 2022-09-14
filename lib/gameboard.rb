@@ -19,6 +19,15 @@ class GameBoard
     end
   end
 
+  def rows
+    [[0, 1, 2, 3, 4, 5, 6],
+     [7, 8, 9, 10, 11, 12, 13],
+     [14, 15, 16, 17, 18, 19, 20],
+     [21, 22, 23, 24, 25, 26, 27],
+     [28, 29, 30, 31, 32, 33, 34],
+     [35, 36, 37, 38, 39, 40, 41]]
+  end
+
   def columns
     [[0, 7, 14, 21, 28, 35],
      [1, 8, 15, 22, 29, 36],
@@ -29,6 +38,8 @@ class GameBoard
      [6, 13, 20, 27, 34, 41]]
   end
 
+  
+
   # returns column array given col_number
   def find_column(col_number = 1)
     columns[col_number].map do |number|
@@ -36,19 +47,22 @@ class GameBoard
     end
   end
 
-  # returns #rows or #columnn (type)
+  # returns #rows or #columnns (in type)
   def retrieve_line(latest_cell, type)
+    puts ['type', type]
+
     number = latest_cell.number
-    send(type).find { |subarray| subarray.include?(number) }
+    send(type).find { |subarray| subarray.include?(number) } unless type == 'diagonal1' || type =='diagonal2'
+    build_diagonal(number, type) unless type == 'rows' || type == 'columns'
   end
 
-  def rows
-    [[0, 1, 2, 3, 4, 5, 6],
-     [7, 8, 9, 10, 11, 12, 13],
-     [14, 15, 16, 17, 18, 19, 20],
-     [21, 22, 23, 24, 25, 26, 27],
-     [28, 29, 30, 31, 32, 33, 34],
-     [35, 36, 37, 38, 39, 40, 41]]
+  def build_diagonal(number, type)
+    puts 'HELLO WORLD'
+    offset = type == 'diagonal1' ? 9 : 7
+    array = [number]
+    array << (number -= 9) until number < 0
+    array << (number += 9) until number >= 41
+    array.uniq!.select!{ |num| num >= 0 && num <= 41 }.sort!
   end
 
   def column_full?(col_number)
@@ -77,43 +91,27 @@ class GameBoard
     cell.change_state(color)
   end
 
-  def any_4_in_a_row?(latest_cell)
-    check_connect_four(latest_cell, 'rows')
-    check_connect_four(latest_cell, 'columns')
-  end
-
-  def check_connect_four(latest_cell, type)
-    offset = 1 if type == 'rows'
-    offset = 7 if type == 'columns'
-    reverse_offset = offset * -1
-    line_array = retrieve_line(latest_cell, type)
-    last_num = latest_cell.number
+  def any_connect_four?(latest_cell)
+    types = ['rows', 'columns']
+    # types = ['rows', 'columns', 'diagonal1', 'diagonal2']
     last_color = latest_cell.state
-    counter = 1
-    tally1 = check_cell_array(line_array, last_num, last_color, offset) || 0
-    tally2 = check_cell_array(line_array, last_num, last_color, reverse_offset) || 0
-    counter += tally1 + tally2
-    puts "That's Connect Four!" if counter == 4
-    puts ['counter', counter]
+
+    types.each do |type|
+      line_array = retrieve_line(latest_cell, type)
+      make_cell_array(line_array, last_color)
+    end
   end
 
-  def check_cell_array(cell_array, last_num, last_color, offset)
-    next_num = last_num
-    counter = 0
-
-    loop do
-      # puts 'entered loop-start'
-      next_num = cell_array.include?(next_num + offset) ? (next_num + offset) : nil
-      break if next_num.nil?
-
-      # puts 'entered loop-mid'
-      if cells[next_num].state == last_color
-        # puts 'entered loop-deep'
-        counter += 1
-      else
-        break
-      end
+  def make_cell_array(line_array, last_color)
+    arr_with_colors = line_array.map do |cell_number|
+      cells[cell_number].state
     end
-    counter
+
+    case arr_with_colors
+    in [*, ^last_color, ^last_color, ^last_color, ^last_color, *]
+      puts 'You win!'
+      return true
+    else
+    end
   end
 end
