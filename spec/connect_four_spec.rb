@@ -52,8 +52,20 @@ describe ConnectFour do
 
   # Public Script Method -> No test necessary, but all methods inside should
   # be tested.
-  # 
   describe '#play_game' do
+    context 'when player 1 gets 4 in a row' do
+      let(:game) { described_class.new }
+
+      xit 'receives #win_message' do
+        allow(game).to receive(:gets).and_return('r', '1', '1', '2', '1', '3', '1', '4')
+        # allow(game.gameboard).to receive(:gets).and_return('r', '1', '1', '2', '1', '3', '1', '4')
+        allow_any_instance_of(GameBoard).to receive(:gets)
+        game.play_game
+      end
+
+      xit 'receives #end_game message' do
+      end
+    end
   end
 
   describe '#choose_color' do
@@ -201,9 +213,25 @@ describe ConnectFour do
     # This is a simple true false conditional, it shouldn't be tested.
   end
 
+  describe '#play_again' do
+    let(:game) { described_class.new }
+    context 'when player inputs y' do
+      it 'sends #play_game message' do
+        allow(game).to receive(:gets).and_return('y')
+        expect(game).to receive(:play_game)
+        game.play_again
+      end
+    end
 
-
-
+    context 'when player inputs n' do
+      it 'does not send #play_game message' do
+        allow(game).to receive(:puts)
+        allow(game).to receive(:gets).and_return('n')
+        expect(game).not_to receive(:play_game)
+        game.play_again
+      end
+    end
+  end
 end
 
 describe Player do
@@ -368,7 +396,6 @@ describe GameBoard do
     let(:cell) { instance_double(Cell, state: ' ') }
     let(:gameboard) { described_class.new }
 
-
     it 'returns Cell object whose state is empty in given column' do
       col_number = 1
       array_of_cells = [cell, cell, cell]
@@ -415,10 +442,35 @@ describe GameBoard do
     end
   end
 
-
   describe '#any_connect_four?' do
-    it 'returns true if there are 4 consecutive colors' do
+    let(:gameboard) { described_class.new }
+    let(:latest_cell) { instance_double(Cell) }
 
+    it 'sends #retrieve_line message' do
+      allow(latest_cell).to receive(:state)
+      allow(gameboard).to receive(:map_colors_to_array)
+      allow(gameboard).to receive(:match_pattern_array)
+
+      expect(gameboard).to receive(:retrieve_line).exactly(4).times
+      gameboard.any_connect_four?(latest_cell)
+    end
+
+    it 'sends #map_colors_to_array message' do
+      allow(latest_cell).to receive(:state)
+      allow(gameboard).to receive(:retrieve_line)
+      allow(gameboard).to receive(:match_pattern_array)
+
+      expect(gameboard).to receive(:map_colors_to_array).exactly(4).times
+      gameboard.any_connect_four?(latest_cell)
+    end
+
+    it 'sends #match_pattern_array message' do
+      allow(latest_cell).to receive(:state)
+      allow(gameboard).to receive(:retrieve_line)
+      allow(gameboard).to receive(:map_colors_to_array)
+
+      expect(gameboard).to receive(:match_pattern_array).exactly(4).times
+      gameboard.any_connect_four?(latest_cell)
     end
   end
 
@@ -438,7 +490,7 @@ describe GameBoard do
   end
 
   describe '#match_pattern_array' do
-    context 'when the array contains connect four' do
+    context 'when the array contains 4 in a row' do
       let(:gameboard) { described_class.new }
       let(:colors_array) { %w[r r r r] }
       let(:last_color) { 'r' }
@@ -449,7 +501,7 @@ describe GameBoard do
       end
     end
 
-    context 'when the array does not contain connect four' do
+    context 'when the array does not contain any 4 in a row' do
       let(:gameboard) { described_class.new }
       let(:colors_array) { [' ', ' ', ' ', ' '] }
       let(:last_color) { 'r' }

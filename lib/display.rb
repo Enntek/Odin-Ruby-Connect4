@@ -43,6 +43,14 @@ module Display
   def win_message(current_player)
     puts "Congrats #{current_player.name}! You won!"
   end
+
+  def play_again_message
+    puts "Would you like to play again? ('y'/'n')"
+  end
+
+  def good_bye_message
+    puts "Oh ok. See you next time!"
+  end
 end
 
 # This module makes sure user input matches given criteria

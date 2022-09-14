@@ -22,6 +22,7 @@ class ConnectFour
     choose_color
     draw_board
     turn_loop until game_over?
+    play_again
   end
 
   def choose_color
@@ -36,30 +37,6 @@ class ConnectFour
     check_draw
     check_win
     switch_current_player
-  end
-
-  def check_win
-    result = gameboard.any_connect_four?(latest_cell)
-    win_message(current_player) if result == true
-    end_game if result == true
-  end
-
-  def check_draw
-    result = gameboard.board_full?
-    game_draw_message if result
-    end_game if result
-  end
-
-  def end_game
-    @game_over = true
-  end
-
-  def game_over?
-    @game_over ? true : false
-  end
-
-  def switch_current_player
-    @current_player = @current_player == player1 ? player2 : player1
   end
 
   def execute_turn(col_number = 0)
@@ -80,5 +57,37 @@ class ConnectFour
     select_column_message(current_player)
     allowable_input = (1..7).to_a
     valid_column_number = validate_input(allowable_input).to_i - 1
+  end
+
+  def check_draw
+    result = gameboard.board_full?
+    game_draw_message if result
+    end_game if result
+  end
+
+  def check_win
+    result = gameboard.any_connect_four?(latest_cell)
+    win_message(current_player) if result == true
+    end_game if result == true
+  end
+
+  def end_game
+    @game_over = true
+  end
+
+  def game_over?
+    @game_over ? true : false
+  end
+
+  def switch_current_player
+    @current_player = @current_player == player1 ? player2 : player1
+  end
+
+  def play_again
+    play_again_message
+    allowable_input = %w[y n]
+    valid_response = validate_input(allowable_input)
+    play_game if valid_response == 'y'
+    good_bye_message if valid_response == 'n'
   end
 end
