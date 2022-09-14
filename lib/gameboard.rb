@@ -42,8 +42,6 @@ class GameBoard
     send(type).find { |subarray| subarray.include?(number) }
   end
 
-
-
   def rows
     [[0, 1, 2, 3, 4, 5, 6],
      [7, 8, 9, 10, 11, 12, 13],
@@ -80,12 +78,8 @@ class GameBoard
   end
 
   def any_4_in_a_row?(latest_cell)
-    # check_row(latest_cell)
-    # check_column(latest_cell)
-
     check_connect_four(latest_cell, 'rows')
     check_connect_four(latest_cell, 'columns')
-
   end
 
   def check_connect_four(latest_cell, type)

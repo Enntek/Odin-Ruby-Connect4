@@ -404,14 +404,28 @@ describe GameBoard do
     end
   end
 
-  describe '#retrieve_row' do
+  describe '#retrieve_line' do
     let(:gameboard) { described_class.new }
     let(:cell) { instance_double(Cell, number: 24) }
+    let(:a_rows) { 'rows' } # a_rows because #rows exists
+    let(:a_columns) { 'columns' } # same
 
-    it 'returns an array of numbers that represent a row' do
-      latest_cell = cell
-      result = gameboard.retrieve_row(latest_cell)
-      expect(result).to include(21..27)
+    context 'when we specify "rows"' do
+      it 'returns an array of numbers that represent a row' do
+        latest_cell = cell
+        result = gameboard.retrieve_line(latest_cell, a_rows)
+        # expect(result).to include(21..27)
+        expect(result).to include(21, 22, 23, 24, 25, 26, 27)
+      end
+    end
+
+    context 'when we specify "columns"' do
+      it 'returns an array of numbers that represent a column' do
+        latest_cell = cell
+        result = gameboard.retrieve_line(latest_cell, a_columns)
+        # expect(result).to be_kind_of(String)
+        expect(result).to include(3, 10, 17, 24, 31, 38)
+      end
     end
   end
 
