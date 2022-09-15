@@ -55,8 +55,8 @@ class ConnectFour
 
   def input_column_number
     select_column_message(current_player)
-    allowable_input = (1..7).to_a
-    valid_column_number = validate_input(allowable_input).to_i - 1
+    allowable_chars = (1..7).to_a
+    valid_column_number = validate_input(allowable_chars).to_i - 1
   end
 
   def check_draw
@@ -85,8 +85,9 @@ class ConnectFour
 
   def play_again
     play_again_message
-    allowable_input = %w[y n]
-    valid_response = validate_input(allowable_input)
+    allowable_chars = %w[y n]
+    valid_response = validate_input(allowable_chars)
+    initialize if valid_response == 'y'
     play_game if valid_response == 'y'
     good_bye_message if valid_response == 'n'
   end

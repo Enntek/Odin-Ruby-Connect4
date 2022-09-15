@@ -19,5 +19,7 @@ Check for win and draw from beginning of game.
 
 You must write edge cases for all of your tests.
 
-Split #match_pattern_array into 2 methods.
+Other testing tools to use: 
+
+
 "

@@ -57,12 +57,17 @@ end
 module ValidInput
   include Display
 
-  def validate_input(allowable_input)
-    user_input = ''
-    allowable_input.map!(&:to_s)
+  def validate_input(allowable_chars, user_input = '')
+    allowable_chars.map!(&:to_s)
+    user_input = gets.chomp.downcase
+    user_input
+  end
+
+  def validate_input_dup(allowable_chars, user_input = '')
+    allowable_chars.map!(&:to_s)
     loop do
       user_input = gets.chomp.downcase
-      break if allowable_input.include?(user_input)
+      break if allowable_chars.include?(user_input)
 
       invalid_input_message
     end

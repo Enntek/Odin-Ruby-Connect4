@@ -54,16 +54,27 @@ describe ConnectFour do
   # be tested.
   describe '#play_game' do
     context 'when player 1 gets 4 in a row' do
-      let(:game) { described_class.new }
 
-      xit 'receives #win_message' do
-        allow(game).to receive(:gets).and_return('r', '1', '1', '2', '1', '3', '1', '4')
-        # allow(game.gameboard).to receive(:gets).and_return('r', '1', '1', '2', '1', '3', '1', '4')
-        allow_any_instance_of(GameBoard).to receive(:gets)
-        game.play_game
+      before do
       end
 
-      xit 'receives #end_game message' do
+      it 'changes game_over to true' do
+        game_end = ConnectFour.new
+        # player1 = instance_double(Player, name: 'Player One')
+        # game_end.instance_variable_set(:@player1, player1)
+        # player2 = instance_double(Player)
+        # allow(game_end).to receive(:gets).and_return('r')
+        # allow(game_end).to receive_message_chain(:gets, :chomp, :downcase).and_return('r')
+        allow_any_instance_of(ConnectFour).to receive(:gets).and_return('1')
+        allow_any_instance_of(Player).to receive(:gets).and_return('1')
+        # allow(game_end.player1).to receive_message_chain(:gets, :chomp, :downcase).and_return('1', '1', '1', '1')
+        # allow(game_end.player2).to receive_message_chain(:gets, :chomp, :downcase).and_return('1', '1', '1')
+        # allow(game_end.player1).to receive(:validate_input).and_return('r', '1', '1', '1', '1')
+        # allow(game_end.player2).to receive(:validate_input).and_return('r', '2', '2', '2', '2')
+        # allow(game_end.player1).to receive(:chomp)
+        # allow(player2).to receive(:gets).and_return('r')
+        # expect(game_end.game_over).to eq(true)
+        game_end.play_game
       end
     end
   end
@@ -217,11 +228,18 @@ describe ConnectFour do
     let(:game) { described_class.new }
     context 'when player inputs y' do
       it 'sends #play_game message' do
+        allow(game).to receive(:puts)
         allow(game).to receive(:gets).and_return('y')
         expect(game).to receive(:play_game)
         game.play_again
       end
+      
+      it 'sends #initialize message' do
+        # Not tested. Rspec warning given.
+      end
     end
+
+
 
     context 'when player inputs n' do
       it 'does not send #play_game message' do
@@ -417,7 +435,7 @@ describe GameBoard do
     end
   end
 
-  describe '#retrieve_line' do
+  describe '#retrieve_line_type' do
     let(:gameboard) { described_class.new }
     let(:cell) { instance_double(Cell, number: 24) }
     let(:a_rows) { 'rows' } # a_rows because #rows exists
@@ -426,7 +444,7 @@ describe GameBoard do
     context 'when we specify "rows"' do
       it 'returns an array of numbers that represent a row' do
         latest_cell = cell
-        result = gameboard.retrieve_line(latest_cell, a_rows)
+        result = gameboard.retrieve_line_type(latest_cell, a_rows)
         # expect(result).to include(21..27)
         expect(result).to include(21, 22, 23, 24, 25, 26, 27)
       end
@@ -435,7 +453,7 @@ describe GameBoard do
     context 'when we specify "columns"' do
       it 'returns an array of numbers that represent a column' do
         latest_cell = cell
-        result = gameboard.retrieve_line(latest_cell, a_columns)
+        result = gameboard.retrieve_line_type(latest_cell, a_columns)
         # expect(result).to be_kind_of(String)
         expect(result).to include(3, 10, 17, 24, 31, 38)
       end
@@ -446,18 +464,18 @@ describe GameBoard do
     let(:gameboard) { described_class.new }
     let(:latest_cell) { instance_double(Cell) }
 
-    it 'sends #retrieve_line message' do
+    it 'sends #retrieve_line_type message' do
       allow(latest_cell).to receive(:state)
       allow(gameboard).to receive(:map_colors_to_array)
       allow(gameboard).to receive(:match_pattern_array)
 
-      expect(gameboard).to receive(:retrieve_line).exactly(4).times
+      expect(gameboard).to receive(:retrieve_line_type).exactly(4).times
       gameboard.any_connect_four?(latest_cell)
     end
 
     it 'sends #map_colors_to_array message' do
       allow(latest_cell).to receive(:state)
-      allow(gameboard).to receive(:retrieve_line)
+      allow(gameboard).to receive(:retrieve_line_type)
       allow(gameboard).to receive(:match_pattern_array)
 
       expect(gameboard).to receive(:map_colors_to_array).exactly(4).times
@@ -466,7 +484,7 @@ describe GameBoard do
 
     it 'sends #match_pattern_array message' do
       allow(latest_cell).to receive(:state)
-      allow(gameboard).to receive(:retrieve_line)
+      allow(gameboard).to receive(:retrieve_line_type)
       allow(gameboard).to receive(:map_colors_to_array)
 
       expect(gameboard).to receive(:match_pattern_array).exactly(4).times

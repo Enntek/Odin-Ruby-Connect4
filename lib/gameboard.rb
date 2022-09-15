@@ -75,7 +75,7 @@ class GameBoard
     end
   end
 
-  def retrieve_line(latest_cell, type)
+  def retrieve_line_type(latest_cell, type)
     number = latest_cell.number
     send(type).find { |subarray| subarray.include?(number) }
   end
@@ -92,6 +92,7 @@ class GameBoard
     result = totally_occupied?(cells_array)
   end
 
+  # takes column or gameboard
   def totally_occupied?(cells_array)
     free = ' '
     cells_array.none? { |cell| cell.state == free }
@@ -111,7 +112,7 @@ class GameBoard
     last_color = latest_cell.state
 
     types.any? do |type|
-      line_array = retrieve_line(latest_cell, type)
+      line_array = retrieve_line_type(latest_cell, type)
       colors_array = map_colors_to_array(line_array)
       match_pattern_array(colors_array, last_color) # true/nil return
     end
@@ -128,6 +129,7 @@ class GameBoard
     in [*, ^last_color, ^last_color, ^last_color, ^last_color, *]
       return true
     else
+      nil
     end
   end
 end
