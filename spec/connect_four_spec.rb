@@ -1,7 +1,9 @@
-require './lib/connect_four'
-require './lib/player'
-require './lib/gameboard'
-require './lib/cell'
+require_relative '../lib/connect_four'
+require_relative '../lib/player'
+require_relative '../lib/gameboard'
+require_relative '../lib/cell'
+
+
 
 describe ConnectFour do
   # Usually we don't test #initialize, this is for practice
@@ -51,30 +53,21 @@ describe ConnectFour do
   end
 
   # Public Script Method -> No test necessary, but all methods inside should
-  # be tested.
+  # be tested. I am testing it by stubbing inputs.
   describe '#play_game' do
+    game_end = ConnectFour.new
+
+    before do
+      allow_any_instance_of(ConnectFour).to receive(:puts)
+    end
+
     context 'when player 1 gets 4 in a row' do
-
-      before do
-      end
-
       it 'changes game_over to true' do
-        game_end = ConnectFour.new
-        # player1 = instance_double(Player, name: 'Player One')
-        # game_end.instance_variable_set(:@player1, player1)
-        # player2 = instance_double(Player)
-        # allow(game_end).to receive(:gets).and_return('r')
-        # allow(game_end).to receive_message_chain(:gets, :chomp, :downcase).and_return('r')
-        allow_any_instance_of(ConnectFour).to receive(:gets).and_return('1')
-        allow_any_instance_of(Player).to receive(:gets).and_return('1')
-        # allow(game_end.player1).to receive_message_chain(:gets, :chomp, :downcase).and_return('1', '1', '1', '1')
-        # allow(game_end.player2).to receive_message_chain(:gets, :chomp, :downcase).and_return('1', '1', '1')
-        # allow(game_end.player1).to receive(:validate_input).and_return('r', '1', '1', '1', '1')
-        # allow(game_end.player2).to receive(:validate_input).and_return('r', '2', '2', '2', '2')
-        # allow(game_end.player1).to receive(:chomp)
-        # allow(player2).to receive(:gets).and_return('r')
-        # expect(game_end.game_over).to eq(true)
+        allow(game_end.player1).to receive(:gets).and_return('r')
+        allow(game_end).to receive(:gets).and_return('5', '4', '5', '4', '5', '4', '5', '4', 'n')
+
         game_end.play_game
+        expect(game_end.game_over).to eq(true)
       end
     end
   end

@@ -21,6 +21,7 @@ class ConnectFour
     greeting
     choose_color
     draw_board
+    turn_loop # delete later
     turn_loop until game_over?
     play_again
   end

@@ -57,13 +57,13 @@ end
 module ValidInput
   include Display
 
-  def validate_input(allowable_chars, user_input = '')
-    allowable_chars.map!(&:to_s)
-    user_input = gets.chomp.downcase
-    user_input
-  end
+  # def validate_input(allowable_chars, user_input = '')
+  #   allowable_chars.map!(&:to_s)
+  #   user_input = gets.chomp.downcase
+  #   user_input
+  # end
 
-  def validate_input_dup(allowable_chars, user_input = '')
+  def validate_input(allowable_chars, user_input = '')
     allowable_chars.map!(&:to_s)
     loop do
       user_input = gets.chomp.downcase
@@ -73,6 +73,8 @@ module ValidInput
     end
     user_input
   end
+
+
 end
 
 class String
