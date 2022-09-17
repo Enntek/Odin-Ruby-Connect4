@@ -21,7 +21,6 @@ class ConnectFour
     greeting
     choose_color
     draw_board
-    turn_loop # delete later
     turn_loop until game_over?
     play_again
   end
@@ -87,9 +86,9 @@ class ConnectFour
   def play_again
     play_again_message
     allowable_chars = %w[y n]
-    valid_response = validate_input(allowable_chars)
-    initialize if valid_response == 'y'
-    play_game if valid_response == 'y'
-    good_bye_message if valid_response == 'n'
+    response = validate_input(allowable_chars)
+    initialize if response == 'y'
+    play_game if response == 'y'
+    good_bye_message if response == 'n'
   end
 end

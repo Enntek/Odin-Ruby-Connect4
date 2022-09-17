@@ -2,8 +2,7 @@ require_relative '../lib/connect_four'
 require_relative '../lib/player'
 require_relative '../lib/gameboard'
 require_relative '../lib/cell'
-
-
+require_relative '../lib/display'
 
 describe ConnectFour do
   # Usually we don't test #initialize, this is for practice
@@ -170,7 +169,7 @@ describe ConnectFour do
     describe '#move_piece' do
       let(:gameboard) { instance_double(GameBoard) }
       let(:game) { described_class.new(gameboard) }
-      
+
       it 'calls locate_free_cell to find the free cell in a given column' do
         col_number = 1
         allow(gameboard).to receive(:take_cell)
@@ -226,13 +225,11 @@ describe ConnectFour do
         expect(game).to receive(:play_game)
         game.play_again
       end
-      
+
       it 'sends #initialize message' do
         # Not tested. Rspec warning given.
       end
     end
-
-
 
     context 'when player inputs n' do
       it 'does not send #play_game message' do
